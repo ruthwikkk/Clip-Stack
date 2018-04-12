@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ff5252</color>
+    <color name="colorPrimaryDark">#ff5252</color>
+    <color name="colorAccent">#ba000d</color>
+    <color name="colorPrimaryLight">#ff867f</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="background">#EEEEEE</color>
+
+
+    <color name="ripple_primary">@color/colorPrimaryLight</color>
+    <color name="ripple_high_light">#FFF59D</color>
+</resources>

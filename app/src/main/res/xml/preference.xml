@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_app_setting_category">
+        <SwitchPreference
+            android:title="@string/pref_service_title"
+            android:summary="@string/pref_service_summary"
+            android:key="pref_start_service"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:title="@string/pref_sourceapp_title"
+            android:summary="@string/pref_sourceapp_summary"
+            android:key="pref_source_app"
+            android:defaultValue="flase"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:dependency="pref_start_service"
+        android:title="@string/pref_notification_title">
+        <SwitchPreference
+            android:title="@string/pref_notification_title"
+            android:key="pref_notification_show"
+            android:summaryOn="@string/pref_notification_summary_on"
+            android:summaryOff="@string/pref_notification_summary_off"
+            android:defaultValue="true" />
+        <ListPreference
+            android:title="@string/pref_notification_priority_title"
+            android:summary="@string/pref_notification_priority_summary"
+            android:key="pref_notification_priority"
+            android:dialogTitle="@string/pref_notification_priority_title"
+            android:defaultValue="0"
+            android:entries="@array/pref_notification_priority_descriptions"
+            android:entryValues="@array/pref_notification_priority_values"
+            android:dependency="pref_notification_show" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_backup_title">
+        <Preference
+            android:title="@string/pref_export_title"
+            android:summary="@string/pref_export_summary"
+            android:key="pref_export_clips"
+            android:defaultValue="0">
+            <intent
+                android:action="android.intent.action.MAIN" />
+        </Preference>
+
+        <Preference
+            android:title="@string/pref_import_title"
+            android:summary="@string/pref_import_summary"
+            android:key="pref_import_clips">
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_about_category">
+        <Preference
+            android:title="@string/pref_about_title"
+            android:summary="@string/pref_about_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://goo.gl/dpwozO" />
+        </Preference>
+        <Preference
+            android:title="@string/pref_rate_title"
+            android:summary="@string/pref_rate_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://goo.gl/1KigA6" />
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

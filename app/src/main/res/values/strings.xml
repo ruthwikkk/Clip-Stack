@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">Clip Man</string>
+    <string name="action_star">Starred</string>
+    <string name="action_delete_all">Clear All</string>
+    <string name="action_need_permission">Need Permission</string>
+    <string name="action_backup">Backup</string>
+    <string name="action_settings">Settings</string>
+    <string name="summary_error">An error has occured \n Press back to exit.</string>
+
+    <string name="title_activity_main">"Clip Man"</string>
+    <string name="dialog_delete_all">Are you sure you want to clear all?\nStarred items will be retained.</string>
+    <string name="dialog_permission_stats">You need to grant access to usage stats.</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+
+    <string name="clip_notification_title">%1$s</string>
+    <string name="action_add">Add</string>
+
+    <string name="toast_copied">%1$s has copied</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <string name="pref_app_setting_category">App Settings</string>
+
+    <string name="pref_service_title">Service</string>
+    <string name="pref_service_summary">Listen system clipboard in background.</string>
+
+    <string name="pref_sourceapp_title">Display Source</string>
+    <string name="pref_sourceapp_summary">View the source of clipboard data.</string>
+    <string name="pref_storage_dialog">Remember clipboards for:</string>
+
+    <string name="pref_notification_title">Notification</string>
+    <string name="pref_notification_summary_on">Show notification.</string>
+    <string name="pref_notification_summary_off">Don\'t show any notification.</string>
+    <string name="pref_notification_priority_title">Notification Priority</string>
+    <string name="pref_notification_priority_summary">Set notification priority.</string>
+
+    <string name="pref_backup_title">Backup Settings</string>
+    <string name="pref_export_title">Backup to File</string>
+    <string name="pref_export_summary">Export your clips to file</string>
+    <string name="pref_import_title">Restore from File</string>
+    <string name="pref_import_summary">Import clips from file</string>
+
+    <string name="pref_notification_pin_title">Pin Notification</string>
+    <string name="pref_notification_pin_summary_on">Always show.</string>
+    <string name="pref_notification_pin_summary_off">Only show when clipboard changed.</string>
+
+    <string name="pref_about_category">About</string>
+    <string name="pref_about_title">Open Source</string>
+    <string name="pref_about_summary">View source code on GitHub.</string>
+
+    <string name="pref_rate_title">Rate me</string>
+    <string name="pref_rate_summary">Rate this app if you think it\'s useful.</string>
+
+
+    <!-- Array Data -->
+
+    <string name="arrays_one_day">1 day</string>
+    <string name="arrays_three_days">3 days</string>
+    <string name="arrays_seven_days">7 days</string>
+    <string name="arrays_thirty_days">30 days</string>
+    <string name="arrays_infinite">infinite</string>
+
+    <string name="pref_click_summary_false">Click to edit. Long click to copy.</string>
+    <string name="pref_click_summary_true">Click to copy. Long click to edit.</string>
+
+    <string name="pref_notification_priority_low">\nLow - without status bar icon.\nAt the end of notifications.\n</string>
+    <string name="pref_notification_priority_middle">Middle - with status bar icon.\nAt the middle of notifications.</string>
+    <string name="pref_notification_priority_high">\nHigh - with status bar icon.\nAt the top of notifications.\n</string>
+</resources>
