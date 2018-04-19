@@ -95,6 +95,7 @@ public class AddEditActivity extends AppCompatActivity {
         else
             toolbar.setTitle("Edit Clip");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initViews(){
@@ -151,6 +152,9 @@ public class AddEditActivity extends AppCompatActivity {
 
             case R.id.action_star:
                 onStarredMenuClicked();
+                break;
+            case android.R.id.home:
+                onBackPressed();
                 break;
 
         }

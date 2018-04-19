@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ruthwikwarrier.cbmanager.R;
 import com.ruthwikwarrier.cbmanager.errorhandle.ExceptionHandler;
@@ -38,8 +39,10 @@ import com.ruthwikwarrier.cbmanager.database.DBHelper;
 import com.ruthwikwarrier.cbmanager.model.ClipObject;
 import com.ruthwikwarrier.cbmanager.services.CBWatchService;
 import com.ruthwikwarrier.cbmanager.services.ClipActionBridge;
+import com.ruthwikwarrier.cbmanager.utils.SharedPref;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,15 +54,17 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.rv_main_cblist) RecyclerView cbRecyclerView;
-    @BindView(R.id.image_main_empty) ImageView imgEmptyList;
+    @BindView(R.id.text_main_empty) TextView textEmptyList;
     @BindView(R.id.fab_main_addclip) FloatingActionButton btnAddClip;
 
     CBListAdapter adapter;
 
     ArrayList<ClipObject> clipList;
+
     DBHelper dbHelper;
 
     private SharedPreferences preference;
+    SharedPref sharedPref;
     boolean allowService = true;
 
     MenuItem itemSearch, itemStar;
@@ -76,10 +81,10 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
         context = this.getBaseContext();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        Integer.parseInt("idid");
+        dbHelper =  new DBHelper(this);
 
         preference = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref = new SharedPref(this);
         readPreferences();
 
         Intent intent = getIntent();
@@ -95,7 +100,7 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
         //Also checks in the preferences
         if(allowService){
             if( !AppUtils.isMyServiceRunning(CBWatchService.class, this))
-                CBWatchService.startCBService(this);
+                CBWatchService.startCBService(context);
             else
                 Log.e("MainActivity","CBWatch Service already running.");
         }else
@@ -121,7 +126,6 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
 
     private void initViews(){
 
-        dbHelper =  new DBHelper(this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         cbRecyclerView.setLayoutManager(mLayoutManager);
         cbRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -147,8 +151,8 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
 
     private void initToolbar(){
 
-       // toolbar.setNavigationIcon(R.mipmap.ic_launcher_round);
-       // toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setNavigationIcon(R.mipmap.ic_launcher_round);
+        toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
     }
 
@@ -270,9 +274,6 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
             case R.id.action_star:
                 onStarredMenuClicked();
                 break;
-            case R.id.action_export:
-
-                break;
             case R.id.action_delete_all:
                 clearAllClips();
                 setAdapter();//refreshing list
@@ -313,15 +314,18 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
     private void readPreferences(){
 
         allowService = preference.getBoolean(SharedPrefNames.PREF_START_SERVICE, true);
+        sharedPref.initSharedPreference(SharedPrefNames.PREF_NAME_APP);
+        if(!sharedPref.getBoolSharedPreference(SharedPrefNames.PREF_IS_FIRST_OPEN))
+            insertDemoData();
     }
 
     private void setViewVisibility(boolean isListEmpty){
 
         if(isListEmpty){
-            imgEmptyList.setVisibility(View.VISIBLE);
+            textEmptyList.setVisibility(View.VISIBLE);
             cbRecyclerView.setVisibility(View.INVISIBLE);
         }else{
-            imgEmptyList.setVisibility(View.GONE);
+            textEmptyList.setVisibility(View.GONE);
             cbRecyclerView.setVisibility(View.VISIBLE);
         }
     }
@@ -341,5 +345,13 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
                 return true;
             }
         });
+    }
+
+    private void insertDemoData(){
+
+        int unicode1 = 0x1F449; //Emoji pointing right
+        int unicode2 = 0x1F448; //Emoji pointing left
+        dbHelper.insertClipToHistory(new ClipObject(AppUtils.getEmojiByUnicode(unicode2)+" Swipe to delete "+AppUtils.getEmojiByUnicode(unicode1), new Date(),true));
+        sharedPref.setSharedPreference(SharedPrefNames.PREF_IS_FIRST_OPEN, true);
     }
 }

@@ -1,5 +1,6 @@
 package com.ruthwikwarrier.cbmanager.services;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -59,13 +60,24 @@ public class CBWatchService extends Service {
     public void onCreate() {
         super.onCreate();
 
+
+
         preference = PreferenceManager.getDefaultSharedPreferences(this);
         notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-       // notificationManager = NotificationManagerCompat.from(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(1, getOreoNotification());
+        }
 
         clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         clipboardManager.addPrimaryClipChangedListener(clipChangedListener);
         dbHelper = new DBHelper(this);
+
+        readPreferences();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            showSingleNotification();
+        }
+
 
         Log.e(TAG," => onCreate()");
     }
@@ -74,8 +86,7 @@ public class CBWatchService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.e(TAG,"Showing Notification");
-        readPreferences();
-        showSingleNotification();
+
 
         return START_STICKY;
     }
@@ -125,9 +136,27 @@ public class CBWatchService extends Service {
     }
 
     public static void startCBService(Context context) {
+
+
+       /* Intent intent = new Intent(context, CBWatchService.class);
+        context.startService(intent);*/
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Intent intent = new Intent(context, CBWatchService.class);
+            context.startForegroundService(intent);
+        } else {
+            Intent intent = new Intent(context, CBWatchService.class);
+            context.startService(intent);
+        }
+
+    }
+
+    /*public static void startCBService(Context context) {
+
         Intent intent = new Intent(context, CBWatchService.class);
         context.startService(intent);
-    }
+
+    }*/
 
     private void showSingleNotification() {
 
@@ -155,7 +184,7 @@ public class CBWatchService extends Service {
                 .setContentTitle("Click to copy saved data")
                 .setOngoing(pinOnTop)
                 .setAutoCancel(false)
-                .setSmallIcon(R.drawable.ic_stat_icon_colorful)
+                .setSmallIcon(R.drawable.ic_filter_none)
                 .setVisibility(NotificationCompat.VISIBILITY_SECRET)
                 .setColor(getResources().getColor(R.color.colorPrimaryLight));
                // .addAction(R.drawable.ic_action_add, getString(R.string.action_add), pOpenMainDialogIntent)
@@ -176,6 +205,32 @@ public class CBWatchService extends Service {
         Notification notification = builder.build();
 
         notificationManager.notify(/*notification id*/0, notification);
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private Notification getOreoNotification(){
+
+        Intent openMainDialogIntent = new Intent(this, ClipActionBridge.class).putExtra(ClipActionBridge.ACTION_CODE, ClipActionBridge.ACTION_OPEN_MAIN_DIALOG);
+        PendingIntent pOpenMainDialogIntent = PendingIntent.getService(CBWatchService.this, pIntentId--, openMainDialogIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
+        notificationChannel.setDescription("Channel description");
+        notificationChannel.enableLights(true);
+        notificationChannel.setLightColor(Color.RED);
+        notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+        notificationChannel.enableVibration(true);
+        notificationManager.createNotificationChannel(notificationChannel);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        builder.setContentIntent(pOpenMainDialogIntent)
+                .setContentTitle("Click to copy saved data")
+                .setOngoing(pinOnTop)
+                .setAutoCancel(false)
+                .setSmallIcon(R.drawable.ic_filter_none)
+                .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                .setColor(getResources().getColor(R.color.colorPrimaryLight));
+        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        Notification notification = builder.build();
+        return notification;
     }
 
     private boolean checkNotificationPermission() {

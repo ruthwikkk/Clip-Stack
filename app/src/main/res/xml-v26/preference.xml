@@ -16,26 +16,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:dependency="pref_start_service"
-        android:title="@string/pref_notification_title">
-        <SwitchPreference
-            android:title="@string/pref_notification_title"
-            android:key="pref_notification_show"
-            android:summaryOn="@string/pref_notification_summary_on"
-            android:summaryOff="@string/pref_notification_summary_off"
-            android:defaultValue="true" />
-        <ListPreference
-            android:title="@string/pref_notification_priority_title"
-            android:summary="@string/pref_notification_priority_summary"
-            android:key="pref_notification_priority"
-            android:dialogTitle="@string/pref_notification_priority_title"
-            android:defaultValue="0"
-            android:entries="@array/pref_notification_priority_descriptions"
-            android:entryValues="@array/pref_notification_priority_values"
-            android:dependency="pref_notification_show" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:title="@string/pref_backup_title">
         <Preference
             android:title="@string/pref_export_title"
@@ -58,7 +38,7 @@
         <Preference
             android:title="@string/pref_about_title"
             android:summary="@string/pref_about_summary"
-            android:key="pref_view_source" >
+            android:key="pref_view_source">
         </Preference>
         <Preference
             android:title="@string/pref_rate_title"

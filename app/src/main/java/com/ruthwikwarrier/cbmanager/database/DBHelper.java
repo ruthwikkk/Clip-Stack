@@ -7,27 +7,21 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import com.ruthwikwarrier.cbmanager.data.StringData;
 import com.ruthwikwarrier.cbmanager.model.ClipObject;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+
+
 
 /**
  * -Ooo-ooO--Ooo-ooO--Ooo-ooO--Ooo-
  * Created by Ruthwik on 23-Mar-18.
  * -Ooo-ooO--Ooo-ooO--Ooo-ooO--Ooo-
  */
-
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;

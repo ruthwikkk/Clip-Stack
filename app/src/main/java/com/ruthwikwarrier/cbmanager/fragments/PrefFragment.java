@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -45,7 +46,7 @@ import java.io.IOException;
 public class PrefFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private SharedPreferences preferences;
-    Preference exportPref, importPref;
+    Preference exportPref, importPref, rateAppPref, sourcePref;
     Context context;
     DBHelper dbHelper;
 
@@ -59,6 +60,8 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
 
         exportPref = findPreference(SharedPrefNames.PREF_EXPORT_CLIP);
         importPref = findPreference(SharedPrefNames.PREF_IMPORT_CLIP);
+        rateAppPref = findPreference(SharedPrefNames.PREF_RATE_APP);
+        sourcePref = findPreference(SharedPrefNames.PREF_VIEW_SOURCE);
 
         dbHelper = new DBHelper(context);
 
@@ -123,6 +126,13 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
         importPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 requestReadPermission();
+                return true;
+            }
+        });
+
+        rateAppPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                openPlayStore();
                 return true;
             }
         });
@@ -280,5 +290,15 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
                 android.os.Process.myUid(), context.getPackageName());
         boolean granted = mode == AppOpsManager.MODE_ALLOWED;
         return granted;
+    }
+
+    private void openPlayStore(){
+
+        final String appPackageName = getActivity().getPackageName(); // getPackageName() from Context or Activity object
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
     }
 }

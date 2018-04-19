@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff5252</color>
-    <color name="colorPrimaryDark">#ff5252</color>
-    <color name="colorAccent">#ba000d</color>
-    <color name="colorPrimaryLight">#ff867f</color>
+    <color name="colorPrimary">#00b2e3</color>
+    <color name="colorPrimaryDark">#0082b1</color>
+    <color name="colorAccent">#0082b1</color>
+    <color name="colorPrimaryLight">#64e4ff</color>
     <color name="divider">#B6B6B6</color>
     <color name="background">#EEEEEE</color>
+    <color name="colorWhite">#FFFFFF</color>
 
 
     <color name="ripple_primary">@color/colorPrimaryLight</color>

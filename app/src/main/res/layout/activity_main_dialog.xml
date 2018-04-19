@@ -35,13 +35,13 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <ImageView
-            android:id="@+id/image_main_empty"
+        <TextView
+            android:id="@+id/text_main_empty"
+            android:text="Empty !"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:src="@mipmap/ic_launcher"
             android:visibility="gone" />
 
     </RelativeLayout>

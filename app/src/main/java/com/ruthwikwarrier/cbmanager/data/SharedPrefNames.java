@@ -17,6 +17,8 @@ public class SharedPrefNames {
     public final static String PREF_SOURCE_APP = "pref_source_app";
     public final static String PREF_IMPORT_CLIP = "pref_import_clips";
     public final static String PREF_EXPORT_CLIP = "pref_export_clips";
+    public final static String PREF_RATE_APP = "pref_rate_app";
+    public final static String PREF_VIEW_SOURCE = "pref_view_source";
 
 
 }

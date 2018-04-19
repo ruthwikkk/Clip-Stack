@@ -6,13 +6,11 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-
 import com.ruthwikwarrier.cbmanager.R;
 import com.ruthwikwarrier.cbmanager.errorhandle.ExceptionHandler;
 import com.ruthwikwarrier.cbmanager.utils.AppUtils;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,8 +27,7 @@ public class CrashActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initToolbar();
-
-       // error.setText(getIntent().getStringExtra(Intent.EXTRA_TEXT));
+        Log.e("CrashActivity", getIntent().getStringExtra(Intent.EXTRA_TEXT));
     }
 
     @Override

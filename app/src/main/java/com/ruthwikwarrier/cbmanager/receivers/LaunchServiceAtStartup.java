@@ -1,16 +1,12 @@
 package com.ruthwikwarrier.cbmanager.receivers;
 
 import android.content.BroadcastReceiver;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ruthwikwarrier.cbmanager.services.CBWatchService;
 
-import java.util.List;
 
 /**
  * -Ooo-ooO--Ooo-ooO--Ooo-ooO--Ooo-
@@ -27,6 +23,8 @@ public class LaunchServiceAtStartup extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             Log.e("LaunchServiceAtStartup", "LaunchServiceAtStartup");
             CBWatchService.startCBService(context);
+
+
         }
 
     }

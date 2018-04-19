@@ -22,7 +22,7 @@ public class MainDialogActivity extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        toolbar.setNavigationIcon(R.drawable.ic_stat_icon);
+        toolbar.setNavigationIcon(R.mipmap.ic_launcher_round);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

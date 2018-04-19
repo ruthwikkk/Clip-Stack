@@ -106,4 +106,8 @@ public class AppUtils {
     public static void showToast(Context context, String text, int length){
         Toast.makeText(context,text,length).show();
     }
+
+    public static String getEmojiByUnicode(int unicode){
+        return new String(Character.toChars(unicode));
+    }
 }
