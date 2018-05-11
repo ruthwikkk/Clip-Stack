@@ -4,6 +4,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/ll_card_parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background"
@@ -100,7 +101,6 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/text_card_sourceapp"
                 android:text="Copied from Telegram"
                 android:layout_marginLeft="16dp"
                 android:layout_marginBottom="8dp"

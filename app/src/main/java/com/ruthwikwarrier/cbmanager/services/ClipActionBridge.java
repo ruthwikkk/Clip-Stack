@@ -4,10 +4,12 @@ import android.app.IntentService;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ruthwikwarrier.cbmanager.R;
 import com.ruthwikwarrier.cbmanager.activities.AddEditActivity;
 import com.ruthwikwarrier.cbmanager.activities.MainActivity;
 import com.ruthwikwarrier.cbmanager.activities.MainDialogActivity;
@@ -21,9 +23,10 @@ public class ClipActionBridge extends IntentService {
     public final static int ACTION_ADD = 2;
     public final static int ACTION_EDIT = 3;
     public final static int ACTION_OPEN_MAIN_DIALOG = 5;
+    public final static int ACTION_LIKE_APP = 6;
+    public final static int ACTION_FEED_BACK = 7;
     public final static int ACTION_ERROR = 9;
 
-    private Intent intent;
 
     public Handler handler;
     public ClipActionBridge() {
@@ -43,7 +46,6 @@ public class ClipActionBridge extends IntentService {
         Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         sendBroadcast(closeIntent);
 
-        this.intent = intent;
         if (intent == null)
             return;
 
@@ -68,6 +70,12 @@ public class ClipActionBridge extends IntentService {
                 return;
             case ACTION_OPEN_MAIN_DIALOG:
                 openMainDialogActivity();
+                return;
+            case ACTION_LIKE_APP:
+                openPlayStore();
+                return;
+            case ACTION_FEED_BACK:
+                openFeedback();
                 return;
             case ACTION_ERROR:
                 showErrorLog(clipText);
@@ -121,6 +129,27 @@ public class ClipActionBridge extends IntentService {
                 .putExtra(MainActivity.EXTRA_IS_FROM_ADD, false);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
+    }
+
+    private void openPlayStore(){
+
+        final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+    }
+
+    private void openFeedback(){
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/email");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"ruthwikwarrier@live.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name)+" Feedback");
+        // intent.putExtra(Intent.EXTRA_TEXT, "I'm email body.");
+        startActivity(Intent.createChooser(intent, "Send Feedback"));
+
     }
 
     private void showErrorLog(String log){

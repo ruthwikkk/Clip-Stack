@@ -38,8 +38,8 @@
         <service
             android:name=".services.CBWatchService"
             android:enabled="true"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE">
             <intent-filter>
                 <action android:name="com.ruthwikwarrier.cbmanager.services.CBWatchService" />
             </intent-filter>
@@ -61,7 +61,8 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".activities.AddEditActivity" />
-        <activity android:name=".activities.CrashActivity"></activity>
+        <activity android:name=".activities.CrashActivity" />
+        <activity android:name=".activities.AboutActivity"></activity>
     </application>
 
 </manifest>

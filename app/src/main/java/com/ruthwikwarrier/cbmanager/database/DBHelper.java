@@ -93,7 +93,7 @@ public class DBHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(CLIP_DATE, timeStamp);
             values.put(CLIP_STRING, clipObject.getText());
-            values.put(CLIP_IS_STAR, clipObject.isStarred());
+            values.put(CLIP_IS_STAR, clipObject.isStar());
 
             openDB();
 
@@ -129,7 +129,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(CLIP_DATE, timeStamp);
         values.put(CLIP_STRING, clipObject.getText());
-        values.put(CLIP_IS_STAR, clipObject.isStarred());
+        values.put(CLIP_IS_STAR, clipObject.isStar());
         String WHERE = ID +"=?";
         String[] WHERE_ARGS = {Integer.toString(clipObject.getId())};
         openDB();
@@ -149,7 +149,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(CLIP_DATE, timeStamp);
         values.put(CLIP_STRING, clipObject.getText());
-        values.put(CLIP_IS_STAR, clipObject.isStarred());
+        values.put(CLIP_IS_STAR, clipObject.isStar());
         String WHERE = CLIP_STRING +"=?";
         String[] WHERE_ARGS = {clipObject.getText()};
         openDB();
@@ -167,7 +167,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
         ContentValues values = new ContentValues();
-        values.put(CLIP_IS_STAR, clipObject.isStarred());
+        values.put(CLIP_IS_STAR, clipObject.isStar());
         String WHERE = ID +"=?";
         String[] WHERE_ARGS = {Integer.toString(clipObject.getId())};
         openDB();
@@ -191,7 +191,7 @@ public class DBHelper extends SQLiteOpenHelper {
         while(c.moveToNext()){
             ClipObject clipObject = new ClipObject(c.getInt(0), c.getString(1),new Date( c.getLong(2)), c.getInt(3) > 0);
             list.add(clipObject);
-            Log.e("DATABASE", ""+clipObject.getText()+"-"+clipObject.isStarred());
+            Log.e("DATABASE", ""+clipObject.getText()+"-"+clipObject.isStar());
         }
         c.close();
         closeDB();
@@ -258,7 +258,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public JSONArray getBackupData(boolean isFavOnly){
+    /*public JSONArray getBackupData(boolean isFavOnly){
 
         ArrayList<ClipObject> list = isFavOnly ? readFavClipHistory() : readAllClipHistory();
         JSONArray array = new JSONArray();
@@ -267,7 +267,7 @@ public class DBHelper extends SQLiteOpenHelper {
             try{
                 jsonObject.put(StringData.JSON_CLIP_TEXT, clip.getText());
                 jsonObject.put(StringData.JSON_CLIP_DATE, clip.getDate().getTime());
-                jsonObject.put(StringData.JSON_CLIP_FAV, clip.isStarred());
+                jsonObject.put(StringData.JSON_CLIP_FAV, clip.isStar());
 
             } catch (JSONException e) {
                 Log.e("DATABASE", "Write JSON error: getBackupData()");
@@ -277,9 +277,9 @@ public class DBHelper extends SQLiteOpenHelper {
             array.put(jsonObject);
         }
         return array;
-    }
+    }*/
 
-    public boolean importBackupData(JSONArray array){
+    /*public boolean importBackupData(JSONArray array){
 
         for(int i=0;i<array.length();i++){
             try {
@@ -292,7 +292,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
         return true;
-    }
+    }*/
 
     private String sqliteEscape(String keyWord) {
         return DatabaseUtils.sqlEscapeString(keyWord);

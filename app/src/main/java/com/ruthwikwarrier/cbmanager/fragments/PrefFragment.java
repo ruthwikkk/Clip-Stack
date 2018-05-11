@@ -29,7 +29,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.ruthwikwarrier.cbmanager.R;
-import com.ruthwikwarrier.cbmanager.database.DBHelper;
+import com.ruthwikwarrier.cbmanager.database.AppDatabase;
 import com.ruthwikwarrier.cbmanager.utils.AppUtils;
 import com.ruthwikwarrier.cbmanager.data.SharedPrefNames;
 import com.ruthwikwarrier.cbmanager.services.CBWatchService;
@@ -46,9 +46,10 @@ import java.io.IOException;
 public class PrefFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private SharedPreferences preferences;
-    Preference exportPref, importPref, rateAppPref, sourcePref;
+    Preference exportPref, importPref;
     Context context;
-    DBHelper dbHelper;
+    //DBHelper dbHelper;
+    AppDatabase db;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -60,10 +61,9 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
 
         exportPref = findPreference(SharedPrefNames.PREF_EXPORT_CLIP);
         importPref = findPreference(SharedPrefNames.PREF_IMPORT_CLIP);
-        rateAppPref = findPreference(SharedPrefNames.PREF_RATE_APP);
-        sourcePref = findPreference(SharedPrefNames.PREF_VIEW_SOURCE);
 
-        dbHelper = new DBHelper(context);
+       // dbHelper = new DBHelper(context);
+        db = AppDatabase.getAppDatabase(context);
 
         setListeners();
 
@@ -130,12 +130,6 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
             }
         });
 
-        rateAppPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                openPlayStore();
-                return true;
-            }
-        });
     }
 
     private void getStatsPermission(){
@@ -163,7 +157,7 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
                     public void onPermissionGranted(PermissionGrantedResponse response) {
                         // permission is granted,
                         Log.e("PrefFragment","Storage Permission granted");
-                        JSONArray array = dbHelper.getBackupData(false);
+                        JSONArray array = AppUtils.getBackupData(db, false);
                         Log.e("PrefFragment","Data:"+array);
                         if(AppUtils.saveJSONToFile(array))
                             AppUtils.showToast(context, "Backup created in SD Card/ClipMan", Toast.LENGTH_SHORT);
@@ -243,7 +237,7 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
                     AppUtils.showToast(context, "Backup file corrupted", Toast.LENGTH_SHORT);
                     e.printStackTrace();
                 }
-                if(dbHelper.importBackupData(array))
+                if(AppUtils.importBackupData(db, array))
                     AppUtils.showToast(context, "Imported Successfully", Toast.LENGTH_SHORT);
                 else
                     AppUtils.showToast(context, "Something went wrong", Toast.LENGTH_SHORT);
@@ -292,13 +286,5 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
         return granted;
     }
 
-    private void openPlayStore(){
 
-        final String appPackageName = getActivity().getPackageName(); // getPackageName() from Context or Activity object
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-        } catch (android.content.ActivityNotFoundException anfe) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-        }
-    }
 }

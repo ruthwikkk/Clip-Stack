@@ -12,13 +12,14 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.ruthwikwarrier.cbmanager.R;
+import com.ruthwikwarrier.cbmanager.database.AppDatabase;
 import com.ruthwikwarrier.cbmanager.utils.AppUtils;
-import com.ruthwikwarrier.cbmanager.database.DBHelper;
 import com.ruthwikwarrier.cbmanager.model.ClipObject;
 import com.ruthwikwarrier.cbmanager.services.ClipActionBridge;
 import com.ruthwikwarrier.cbmanager.viewholders.CBListViewHolder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * -Ooo-ooO--Ooo-ooO--Ooo-ooO--Ooo-
@@ -29,17 +30,19 @@ import java.util.ArrayList;
 public class CBListAdapter extends RecyclerView.Adapter<CBListViewHolder> implements Filterable {
 
     Context context;
-    ArrayList<ClipObject> clipDataList;
-    ArrayList<ClipObject> clipDataFilterList;
-    DBHelper dbHelper;
+    List<ClipObject> clipDataList;
+    List<ClipObject> clipDataFilterList;
+    //DBHelper dbHelper;
+    AppDatabase db;
     boolean isFromNotification;
 
-    public CBListAdapter(Context con, ArrayList<ClipObject> list, DBHelper helper, boolean isNot){
+    public CBListAdapter(Context con, List<ClipObject> list, AppDatabase helper, boolean isNot){
         this.context = con;
         this.clipDataList = list;
         this.clipDataFilterList = list;
         this.isFromNotification = isNot;
-        dbHelper = helper;
+      //  dbHelper = helper;
+        db = helper;
     }
 
     @Override
@@ -59,7 +62,7 @@ public class CBListAdapter extends RecyclerView.Adapter<CBListViewHolder> implem
         holder.textTime.setText(AppUtils.getFormatTime(context, clipObject.getDate()));
         holder.textDate.setText(AppUtils.getFormatDate(context, clipObject.getDate()));
 
-        if (clipObject.isStarred()) {
+        if (clipObject.isStar()) {
             holder.btnStar.setImageResource(R.drawable.ic_action_star_yellow);
         } else {
             holder.btnStar.setImageResource(R.drawable.ic_action_star_outline_grey600);
@@ -83,10 +86,11 @@ public class CBListAdapter extends RecyclerView.Adapter<CBListViewHolder> implem
         holder.btnStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clipObject.setStarred(!clipObject.isStarred());
-                dbHelper.updateClipFav(clipObject);
+                clipObject.setStar(!clipObject.isStar());
+               // dbHelper.updateClipFav(clipObject);
+                db.clipDAO().updateClip(clipObject);
 
-                if(clipObject.isStarred())
+                if(clipObject.isStar())
                     holder.btnStar.setImageResource(R.drawable.ic_action_star_yellow);
                 else
                     holder.btnStar.setImageResource(R.drawable.ic_action_star_outline_grey600);
@@ -113,7 +117,8 @@ public class CBListAdapter extends RecyclerView.Adapter<CBListViewHolder> implem
     }
 
     public void removeItem(int position) {
-        dbHelper.deleteClip(clipDataList.get(position).getId());
+       // dbHelper.deleteClip(clipDataList.get(position).getId());
+        db.clipDAO().deleteClip(clipDataList.get(position));
         clipDataList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, clipDataList.size());

@@ -27,15 +27,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ruthwikwarrier.cbmanager.R;
+import com.ruthwikwarrier.cbmanager.database.AppDatabase;
 import com.ruthwikwarrier.cbmanager.errorhandle.ExceptionHandler;
 import com.ruthwikwarrier.cbmanager.utils.AppUtils;
 import com.ruthwikwarrier.cbmanager.adapters.CBListAdapter;
 import com.ruthwikwarrier.cbmanager.data.SharedPrefNames;
-import com.ruthwikwarrier.cbmanager.database.DBHelper;
 import com.ruthwikwarrier.cbmanager.model.ClipObject;
 import com.ruthwikwarrier.cbmanager.services.CBWatchService;
 import com.ruthwikwarrier.cbmanager.services.ClipActionBridge;
@@ -43,6 +42,7 @@ import com.ruthwikwarrier.cbmanager.utils.SharedPref;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,9 +59,10 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
 
     CBListAdapter adapter;
 
-    ArrayList<ClipObject> clipList;
+    List<ClipObject> clipList;
 
-    DBHelper dbHelper;
+   // DBHelper dbHelper;
+    AppDatabase db;
 
     private SharedPreferences preference;
     SharedPref sharedPref;
@@ -81,7 +82,8 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
         context = this.getBaseContext();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        dbHelper =  new DBHelper(this);
+      //  dbHelper =  new DBHelper(this);
+        db = AppDatabase.getAppDatabase(this);
 
         preference = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref = new SharedPref(this);
@@ -157,23 +159,23 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
     }
 
     protected void setAdapter() {
-
-
-        if(isStarred){ //Shows only favorite clips
-            clipList = dbHelper.readFavClipHistory();
+if(isStarred){ //Shows only favorite clips
+           // clipList = dbHelper.readFavClipHistory();
+            clipList = db.clipDAO().readFavClipHistory();
             if(clipList.size()<1){
                 setViewVisibility(true);
             }else{
-                adapter = new CBListAdapter(this, clipList, dbHelper, isFromNotification);
+                adapter = new CBListAdapter(this, clipList, db, isFromNotification);
                 cbRecyclerView.setAdapter(adapter);
             }
 
         }else{
-            clipList = dbHelper.readAllClipHistory();
+            //clipList = dbHelper.readAllClipHistory();
+            clipList = db.clipDAO().readAllClipHistory();
             if(clipList.size()<1){
                 setViewVisibility(true);
             }else{
-                adapter = new CBListAdapter(this, clipList, dbHelper, isFromNotification);
+                adapter = new CBListAdapter(this, clipList, db, isFromNotification);
                 cbRecyclerView.setAdapter(adapter);
                 setViewVisibility(false);
             }
@@ -281,6 +283,9 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                break;
+            case R.id.action_about:
+                startActivity(new Intent(this, AboutActivity.class));
+                break;
 
         }
 
@@ -301,7 +306,8 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
                 .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                dbHelper.deleteAllClips();
+                               // dbHelper.deleteAllClips();
+                                db.clipDAO().deleteAllClips();
                                 setAdapter();
                             }
                         }
@@ -351,7 +357,8 @@ public class MainActivity extends /*BaseActivity*/ AppCompatActivity{
 
         int unicode1 = 0x1F449; //Emoji pointing right
         int unicode2 = 0x1F448; //Emoji pointing left
-        dbHelper.insertClipToHistory(new ClipObject(AppUtils.getEmojiByUnicode(unicode2)+" Swipe to delete "+AppUtils.getEmojiByUnicode(unicode1), new Date(),true));
+        //dbHelper.insertClipToHistory(new ClipObject(AppUtils.getEmojiByUnicode(unicode2)+" Swipe to delete "+AppUtils.getEmojiByUnicode(unicode1), new Date(),true));
+        db.clipDAO().insertClipToHistory(new ClipObject(AppUtils.getEmojiByUnicode(unicode2)+" Swipe to delete "+AppUtils.getEmojiByUnicode(unicode1), new Date(),true));
         sharedPref.setSharedPreference(SharedPrefNames.PREF_IS_FIRST_OPEN, true);
     }
 }

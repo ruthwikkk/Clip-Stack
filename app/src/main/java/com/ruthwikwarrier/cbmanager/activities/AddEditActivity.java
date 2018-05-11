@@ -16,9 +16,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ruthwikwarrier.cbmanager.R;
+import com.ruthwikwarrier.cbmanager.database.AppDatabase;
 import com.ruthwikwarrier.cbmanager.errorhandle.ExceptionHandler;
 import com.ruthwikwarrier.cbmanager.utils.AppUtils;
-import com.ruthwikwarrier.cbmanager.database.DBHelper;
 import com.ruthwikwarrier.cbmanager.model.ClipObject;
 
 import java.util.Date;
@@ -33,7 +33,8 @@ public class AddEditActivity extends AppCompatActivity {
     @BindView(R.id.edt_addedit_clip) EditText edtText;
 
     ClipObject clipObject;
-    DBHelper dbHelper;
+    //DBHelper dbHelper;
+    AppDatabase db;
 
     MenuItem itemStar;
 
@@ -49,7 +50,8 @@ public class AddEditActivity extends AppCompatActivity {
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         context = this.getBaseContext();
         setContentView(R.layout.activity_add_edit);
-        dbHelper = new DBHelper(context);
+        //dbHelper = new DBHelper(context);
+        db = AppDatabase.getAppDatabase(this);
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
@@ -57,12 +59,13 @@ public class AddEditActivity extends AppCompatActivity {
         Log.e("AddEditActivity","isFromAdd: "+isFromAdd);
         if(!isFromAdd){
             clip_id = intent.getStringExtra("CLIP_ID");
-            clipObject = dbHelper.readSingleClip(clip_id);
-            isStarred = clipObject.isStarred();
+           // clipObject = dbHelper.readSingleClip(clip_id);
+            clipObject = db.clipDAO().readSingleClip(clip_id);
+            isStarred = clipObject.isStar();
             edtText.setText(clipObject.getText());
             Log.e("AddEditActivity","Clip Id: "+clip_id);
             Log.e("AddEditActivity","Clip Text: "+clipObject.getText());
-            Log.e("AddEditActivity","Clip Starred: "+clipObject.isStarred());
+            Log.e("AddEditActivity","Clip Starred: "+clipObject.isStar());
         }
 
 
@@ -111,11 +114,13 @@ public class AddEditActivity extends AppCompatActivity {
 
                     if(isFromAdd){
                         clipObject = new ClipObject (text,new Date(), isStarred);
-                        dbHelper.insertClipToHistory(clipObject);
+                        //dbHelper.insertClipToHistory(clipObject);
+                        db.clipDAO().insertClipToHistory(clipObject);
                     }
                     else{
                         clipObject = new ClipObject(Integer.parseInt(clip_id), text, new Date(), isStarred);
-                        dbHelper.updateClip(clipObject);
+                        //dbHelper.updateClip(clipObject);
+                        db.clipDAO().updateClip(clipObject);
                     }
 
                     Toast.makeText(context,"Saved",Toast.LENGTH_SHORT).show();

@@ -22,15 +22,17 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.ruthwikwarrier.cbmanager.R;
+import com.ruthwikwarrier.cbmanager.database.AppDatabase;
 import com.ruthwikwarrier.cbmanager.utils.AppUtils;
 import com.ruthwikwarrier.cbmanager.data.SharedPrefNames;
-import com.ruthwikwarrier.cbmanager.database.DBHelper;
 import com.ruthwikwarrier.cbmanager.model.ClipObject;
 
 import java.util.Date;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * -Ooo-ooO--Ooo-ooO--Ooo-ooO--Ooo-
@@ -54,7 +56,8 @@ public class CBWatchService extends Service {
     String TAG = "CB WatchService";
     ClipboardManager clipboardManager;
 
-    DBHelper dbHelper;
+    //DBHelper dbHelper;
+    AppDatabase db;
 
     @Override
     public void onCreate() {
@@ -71,7 +74,8 @@ public class CBWatchService extends Service {
 
         clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         clipboardManager.addPrimaryClipChangedListener(clipChangedListener);
-        dbHelper = new DBHelper(this);
+       // dbHelper = new DBHelper(this);
+        db = AppDatabase.getAppDatabase(this);
 
         readPreferences();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -119,6 +123,7 @@ public class CBWatchService extends Service {
         if (!clipboardManager.hasPrimaryClip())
             return;
         String clipString;
+        int id;
         try {
             //Don't use CharSequence .toString()!
             CharSequence charSequence = clipboardManager.getPrimaryClip().getItemAt(0).getText();
@@ -132,7 +137,17 @@ public class CBWatchService extends Service {
             return;
         Log.e(TAG,"Clipboard Data: "+clipString +" from "+ sourceApp);
         ClipObject clipObject = new ClipObject(clipString, new Date(), false);
-        dbHelper.insertClipToHistory(clipObject);
+       // dbHelper.insertClipToHistory(clipObject);
+
+        Log.e(TAG,"isExists :" +db.clipDAO().isExists(clipString));
+        if(db.clipDAO().isExists(clipString) == null)
+             db.clipDAO().insertClipToHistory(clipObject);
+        else{
+            id = db.clipDAO().isExists(clipString).getId();
+            clipObject.setId(id);
+            db.clipDAO().updateClip(clipObject);
+        }
+
     }
 
     public static void startCBService(Context context) {

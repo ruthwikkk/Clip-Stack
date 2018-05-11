@@ -99,7 +99,6 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/text_card_sourceapp"
                 android:text="Copied from Telegram"
                 android:layout_marginLeft="16dp"
                 android:layout_marginBottom="8dp"
